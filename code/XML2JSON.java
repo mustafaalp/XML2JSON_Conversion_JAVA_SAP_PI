@@ -29,7 +29,7 @@ public class XML2JSON extends AbstractTransformation {
 	private List<String> delete_entry = new ArrayList<String>();
 	private int last_level_to_keep = 0;
 	private boolean num_to_string = false;
-	private List<String> integer_fields = new ArrayList<String>();
+	private List<String> numeric_fields = new ArrayList<String>();
 
 	public XML2JSON() {
 		
@@ -38,7 +38,7 @@ public class XML2JSON extends AbstractTransformation {
 
 	public XML2JSON(List<String> array_nodes, List<String> hide_keys,
 			List<String> delete_entry, int last_level_to_keep, 
-			boolean num_to_string, List<String> integer_fields) {
+			boolean num_to_string, List<String> numeric_fields) {
 		/*
 		 * Declare constructor to define the class-level variables Input: 
 		 * 1) array_nodes -> List to store Keys that should be JSONArray 
@@ -58,7 +58,7 @@ public class XML2JSON extends AbstractTransformation {
 		 * we add this field because we needed to solve a case some of the numbers are integer but not all of them
 		 * so fields given in this parameter will be kept as number
 		 */
-		this.integer_fields = integer_fields;
+		this.numeric_fields = numeric_fields;
 	}
 
 	public static void main(String[] args) {
@@ -93,14 +93,14 @@ public class XML2JSON extends AbstractTransformation {
 			String[] array_nodes = {"Node3"};			
 			String[] hide_keys = { "ns0:MT_3RD_ESSITY_RECEIVE_CONFIRMATION_REQ" };
 			String[] delete_entry = { "xmlns:ns2" };
-			String[] integer_fields = {"ExpectedQuantity","ActualQuantity"};
+			String[] numeric_fields = {"ExpectedQuantity","ActualQuantity"};
 			int last_level_to_keep = 1;
 			boolean num_to_string = true;
 			
 			// Instance of XML2JSON created and parameters passed to contructor
 			XML2JSON obj = new XML2JSON(Arrays.asList(array_nodes), Arrays
 					.asList(hide_keys), Arrays.asList(delete_entry),
-					last_level_to_keep, num_to_string, Arrays.asList(integer_fields));
+					last_level_to_keep, num_to_string, Arrays.asList(numeric_fields));
 
 			// Instance of XML2JSON created and parameters passed to contructor
 			obj.readStreamContent(input, output);
@@ -148,8 +148,8 @@ public class XML2JSON extends AbstractTransformation {
 				.getInt("LAST_LEVEL_TO_KEEP");
 		boolean num_to_string = Boolean.parseBoolean(transformationInput.getInputParameters()
 		.getString("NUM_TO_STRING"));
-		String integer_fields = transformationInput.getInputParameters()
-				.getString("INTEGER_FIELDS");
+		String numeric_fields = transformationInput.getInputParameters()
+				.getString("numeric_FIELDS");
 
 		// Display parameter value on trace
 		getTrace().addInfo("Input Parameters listed below: \n");
@@ -158,7 +158,7 @@ public class XML2JSON extends AbstractTransformation {
 		getTrace().addInfo("DELETE_ENTRY: " + delete_entry);
 		getTrace().addInfo("LAST_LEVEL_TO_KEEP: " + last_level_to_keep);
 		getTrace().addInfo("NUM_TO_STRING: " + num_to_string);
-		getTrace().addInfo("INTEGER_FIELDS: " + integer_fields);
+		getTrace().addInfo("numeric_FIELDS: " + numeric_fields);
 		
 		// Output Payload Stream is obtained to send the data
 		OutputStream outputStream = transformationOutput.getOutputPayload()
@@ -170,7 +170,7 @@ public class XML2JSON extends AbstractTransformation {
 		// Instance of XML2JSON created and parameters passed to contructor
 		XML2JSON obj = new XML2JSON(Arrays.asList(array_nodes.split(",")),
 				Arrays.asList(hide_keys.split(",")), Arrays.asList(delete_entry
-						.split(",")), last_level_to_keep, num_to_string,  Arrays.asList(integer_fields
+						.split(",")), last_level_to_keep, num_to_string,  Arrays.asList(numeric_fields
 								.split(",")));
 
 		// Call readStreamContent() to Handle the input and output stream content
@@ -399,14 +399,14 @@ public class XML2JSON extends AbstractTransformation {
 	}
 	
 	/**
-	 * returns true if key is not in the integer_fields list
+	 * returns true if key is not in the numeric_fields list
 	 * @param key
 	 * @return
 	 */
 	protected boolean doesNotContain(String key) {
 		boolean result = true;
 	
-		for (String element : this.integer_fields){
+		for (String element : this.numeric_fields){
 	         if (element.contains(key)){
 	              result = false;
 	              break;
